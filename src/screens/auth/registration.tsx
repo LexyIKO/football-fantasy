@@ -65,8 +65,10 @@ const Registration = () => {
     };
 
     const handleSubmit = async () => {
-        const isRegistred = await registerUser(login, password);
-        if(isRegistred) console.log(isRegistred)
+        const isRegistred = await registerUser(login, password).then(()=>{
+            navigation.navigate('Login' as never)
+        });
+
     }
 
     useEffect(()=>{

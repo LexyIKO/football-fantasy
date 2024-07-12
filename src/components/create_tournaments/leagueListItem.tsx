@@ -38,7 +38,7 @@ const LeagueListItem  = (props: leagueList) => {
                     <View style={{paddingHorizontal: 20}}>
                         <Text style={[styles.Text, {fontFamily: 'Unbounded-Bold', fontSize: 16}]}>{props.el.name}</Text>
                         <View style={styles.MainInfo}>
-                            <Text style={styles.Text}>{props.el.start_datetime} - {props.el.end_datetime}</Text>
+                            <Text style={styles.Text}>{props.el.start_datetime.split(' ')[0]} - {props.el.end_datetime.split(' ')[0]}</Text>
                             <Text style={styles.Text}>5</Text>
                         </View>
                         <Text style={[styles.Text, {marginTop:0}]}>Мин. баланс: 200</Text>
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     MainInfo: {
         display: "flex",
         flexDirection: 'row',
+        marginTop: 10,
         justifyContent: "space-between",
     },
     Block: {

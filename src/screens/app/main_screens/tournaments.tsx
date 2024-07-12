@@ -37,9 +37,9 @@ const Tournaments = () => {
     const [tournamentList, setTournamentList] = useState<tournamentList[]>([
         {trId: 1, key: '1', trName: 'Лига чемпионов', trMaxPlayers: 4, trPlayersCount: 4, startDate: '20.07', endDate: '25.08', balance: 400, status: 'ended'},
         {trId: 2, key: '2', trName: 'Володя сюда', trMaxPlayers: 7, trPlayersCount: 6, startDate: '14.07', endDate: '20.07', balance: 500, status: 'wait'},
-        {trId: 3, key: '3', trName: 'Begit, press ka4at', trMaxPlayers: 5, trPlayersCount: 4, startDate: '25.07', endDate: '02.08', balance: 700, status: 'ongoing'},
-        {trId: 4, key: '4', trName: 'Мама я в телевизоре', trMaxPlayers: 2, trPlayersCount: 1, startDate: '06.08', endDate: '14.09', balance: 250, status: 'edned'},
-        {trId: 5, key: '5', trName: '2120 межгалактичесий', trMaxPlayers: 3, trPlayersCount: 3, startDate: '20.04', endDate: '20.05' , balance: 320, status: 'wait'},
+        {trId: 3, key: '3', trName: 'Begit, press ka4at', trMaxPlayers: 5, trPlayersCount: 5, startDate: '25.07', endDate: '02.08', balance: 700, status: 'ongoing'},
+        {trId: 4, key: '4', trName: 'Мама я в телевизоре', trMaxPlayers: 2, trPlayersCount: 1, startDate: '06.08', endDate: '14.09', balance: 250, status: 'wait'},
+        {trId: 5, key: '5', trName: '2120 межгалактичесий', trMaxPlayers: 3, trPlayersCount: 3, startDate: '20.04', endDate: '20.05' , balance: 320, status: 'ended'},
 
     ])
 
@@ -92,19 +92,22 @@ const Tournaments = () => {
         <Pressable style={styles.Container} onPress={Keyboard.dismiss}>
             <View style={styles.HeaderBox}>
                 <Animated.View style={[styles.FindField, { width: findFieldWidth }]}>
-                    <SvgIconFind />
-                    <TextInput
-                        style={[styles.Text,
-                            { width:
-                                    isFindFocused
-                                        ? Dimensions.get("window").width - 18 - 40 - 10 - 60 - 26
-                                        : (Dimensions.get("window").width - 18 - 5)/2 - 60 - 26
-                            }, { "outlineStyle": 'none'}]}
-                        placeholder='Поиск'
-                        onFocus={()=>{setIsFindFocused(true)}}
-                        onBlur={()=>{setIsFindFocused(false)}}
 
-                    />
+                        <SvgIconFind />
+                    <Pressable     onPress={()=>{setIsFindFocused(true)}}>
+                        <TextInput
+                            style={[styles.Text,
+                                { width:
+                                        isFindFocused
+                                            ? Dimensions.get("window").width - 18 - 40 - 10 - 60 - 26
+                                            : (Dimensions.get("window").width - 18 - 5)/2 - 60 - 26
+                                }, { "outlineStyle": 'none'}]}
+                            placeholder='Поиск'
+
+                            onBlur={()=>{setIsFindFocused(false)}}
+
+                        />
+                    </Pressable>
                 </Animated.View>
 
                 <Animated.View style={[styles.CreateButtonBG, { width: createButtonWidth }]}>
@@ -125,7 +128,7 @@ const Tournaments = () => {
             </View>
             <Text style={styles.Title}>Турниры</Text>
 
-            <View style={{height: 540, paddingVertical: 20}}>
+            <View style={styles.FlatListSize}>
                 <FlatList
                     data={tournamentList}
                     renderItem = {({item}) => (<TournamentCard el={item} />)}
@@ -201,5 +204,10 @@ const styles = StyleSheet.create({
     },
     Scroller: {
       gap: 20
+    },
+    FlatListSize: {
+        height: Dimensions.get('window').height - 90 - 25 - 30 - 60 -50,
+        paddingVertical: 20
     }
+
 });

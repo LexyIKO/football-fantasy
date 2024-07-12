@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {Text, SafeAreaView, Pressable, View, StyleSheet, Dimensions, Modal} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -11,16 +11,14 @@ import LeagueModal from "../../../components/create_tournaments/leagueModal";
 import IconClose from "../../../images/icons/createTournament/IconClose";
 import SvgIconPlus from "../../../images/icons/createTournament/IconArrowUp";
 import SvgIconMinus from "../../../images/icons/createTournament/IconArrowDown";
-import {isPastDate, isToday} from "react-native-calendars/src/dateutils";
 
 interface leagueList {
-    leagueId: number,
-    key: string,
-    leagueName: string,
-    startDate: string,
-    endDate: string,
-    maxPlayers: number,
-    minBalance: number,
+    id: number,
+    name: string,
+    start_datetime: string,
+    end_datetime: string,
+    // maxPlayers: number,
+    // minBalance: number,
 }
 
 const CreateTournament = () => {
@@ -33,9 +31,13 @@ const CreateTournament = () => {
     const [endDate, setEndDate] = useState<string>('');
     const [selectedDay, setSelectedDay] = useState<string>('');
     const [league, setLeague] = useState<leagueList>();
+    const [leagueName, setLeagueName] = useState<string>('')
 
     const [isCalendarModalVisible, setIsCalendarModalVisible] = useState<boolean>(false);
     const [isFindLeagueModalVisible, setIsFindLeagueModalVisible] = useState<boolean>(false)
+
+    const [isValid, setIsValid] = useState<boolean>(false)
+    const focusElem = useRef<any>(null)
 
     const gamerNumberPlus = () => {
         if(Number(gamerNumber) < 8){
@@ -49,9 +51,40 @@ const CreateTournament = () => {
         }
     }
 
+    const validation = () => {
+        if(!leagueName || !gameName || !tournamentBalance) {
+            return false
+        }
+
+        if(!startDate || !endDate){
+            return false
+        }
+
+        if(Number(gamerNumber) < 2 || Number(gamerNumber) > 8){
+            return false
+        }
+
+
+        return true
+    }
+
+    useEffect(() => {
+        if(league){
+            setLeagueName(league.name)
+        }
+    }, [league]);
+
+    useEffect(() => {
+        setIsValid(validation)
+    }, [leagueName, gameName, tournamentBalance, gamerNumber, startDate, endDate]);
+
+    useEffect(() => {
+        focusElem.current.focus()
+    }, [startDate, endDate]);
+
     return(
 
-        <SafeAreaView style={styles.Container}>
+        <SafeAreaView style={styles.Container} ref={focusElem}>
             <View style={styles.Header}>
                 <Text style={styles.Title}>Создание турнира</Text>
                 <Pressable onPress={()=> {
@@ -63,23 +96,30 @@ const CreateTournament = () => {
 
             </View>
 
-            <CustomInput
-                styleContainer={{marginTop: 30}}
-                styleContainerWidth={Dimensions.get('window').width - 36}
-                placeholder={"Футбольная лига"}
-                onFocus={()=> {
-                    setIsFindLeagueModalVisible(true)
+            <Pressable
+                onPress={()=> {setIsFindLeagueModalVisible(true)
+            }}>
+                <CustomInput
+                    styleContainer={{marginTop: 30}}
+                    styleContainerWidth={Dimensions.get('window').width - 36}
+                    placeholder={"Футбольная лига"}
+                    value={leagueName}
+                    caretHidden={true}
+                />
+
+            </Pressable>
+
+
+
+
+
+            <LeagueModal
+                closeModal={(league ) => {
+                    setIsFindLeagueModalVisible(false)
+                    setLeague(league)
                 }}
+                isModalVisible={isFindLeagueModalVisible}
             />
-
-
-
-
-            <LeagueModal   closeModal={(league) => {
-                setLeague(league)
-                setIsFindLeagueModalVisible(false)
-            }}
-                           isModalVisible={isFindLeagueModalVisible}/>
 
 
 
@@ -105,41 +145,36 @@ const CreateTournament = () => {
             />
 
             <View style={styles.DateSelector}>
-                <CustomInput
-                    styleContainer={{marginTop: 20}}
-                    styleContainerWidth={(Dimensions.get('window').width - 38) / 2 - 5}
-                    placeholder={'Начало'}
-                    value={startDate}
-                    style={{textAlign: 'center'}}
-                    caretHidden={true}
-                    inputMode={'none'}
-                    // onPress={() => {
-                    //     setIsCalendarModalVisible(true);
-                    //     setSelectedDay('start');
-                    // }}
-                    onFocus={() => {
-                        setIsCalendarModalVisible(true);
-                        setSelectedDay('start');
-                    }}
-                />
+                <Pressable  onPress={() => {
+                    setIsCalendarModalVisible(true);
+                    setSelectedDay('start');
+                }}>
+                    <CustomInput
+                        styleContainer={{marginTop: 20}}
+                        styleContainerWidth={(Dimensions.get('window').width - 38) / 2 - 5}
+                        placeholder={'Начало'}
+                        value={startDate}
+                        style={{textAlign: 'center'}}
+                        caretHidden={true}
+                        inputMode={'none'}
+                    />
+                </Pressable>
 
-                <CustomInput
-                    styleContainer={{marginTop: 20}}
-                    styleContainerWidth={(Dimensions.get('window').width - 38) / 2 - 5}
-                    placeholder={'Конец'}
-                    style={{textAlign: 'center'}}
-                    value={endDate}
-                    inputMode={'none'}
-                    caretHidden={true}
-                    // onPress={() => {
-                    //     setIsCalendarModalVisible(true);
-                    //     setSelectedDay('end');
-                    // }}
-                    onFocus={() => {
-                        setIsCalendarModalVisible(true);
-                        setSelectedDay('end');
-                    }}
-                />
+                <Pressable  onPress={() => {
+                    setIsCalendarModalVisible(true);
+                    setSelectedDay('end');
+                }}>
+                    <CustomInput
+                        styleContainer={{marginTop: 20}}
+                        styleContainerWidth={(Dimensions.get('window').width - 38) / 2 - 5}
+                        placeholder={'Конец'}
+                        style={{textAlign: 'center'}}
+                        value={endDate}
+                        inputMode={'none'}
+                        caretHidden={true}
+                    />
+                </Pressable>
+
             </View>
 
             <View style={styles.gamerNumber}>
@@ -178,6 +213,10 @@ const CreateTournament = () => {
                     <Privacy isPrivate={true} isGamePrivate={isGamePrivate} />
                 </Pressable>
             </View>
+
+            <Pressable style={[styles.ButtonSubmit, {opacity: isValid ? 1 : 0.7}]}>
+                <Text style={styles.ButtonSubmitText}>Создать</Text>
+            </Pressable>
 
 
             <Modal
@@ -225,7 +264,7 @@ const CreateTournament = () => {
 
                     <Pressable style={styles.CalendarModalButtonConfirm}
 
-                        onPress={()=>{setIsCalendarModalVisible(false); }}
+                        onPress={()=>{setIsCalendarModalVisible(false); focusElem.current.focus()}}
                     >
                         <Text style={[styles.Title, {color: 'white'}]}>Подтвердить</Text>
                     </Pressable>
@@ -310,4 +349,18 @@ const styles = StyleSheet.create({
         borderRadius: 40,
         marginTop: 30
     },
+    ButtonSubmit: {
+        width: 200,
+        height: 50,
+        backgroundColor: 'rgba(40, 88, 205, 1)',
+        borderRadius: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 50
+    },
+    ButtonSubmitText:{
+        color: 'white',
+        fontSize: 20,
+        fontFamily: 'Unbounded-Regular'
+    }
 })

@@ -112,12 +112,12 @@ const Login = () => {
                     value = {login}
                     maxLength={16}
                     onChangeText = {SetLogin}
-                    onFocus={()=>{
-                        setShowLogo(false)
-                    }}
-                    onBlur={()=>{
-                        setShowLogo(true)
-                    }}
+                    // onFocus={()=>{
+                    //     setShowLogo(false)
+                    // }}
+                    // onBlur={()=>{
+                    //     setShowLogo(true)
+                    // }}
                 />
 
                 {errors.login && (
@@ -131,12 +131,12 @@ const Login = () => {
                     secureTextEntry
                     value = {password}
                     onChangeText = {SetPassword}
-                    onFocus={()=>{
-                        setShowLogo(false)
-                    }}
-                    onBlur={()=>{
-                        setShowLogo(true)
-                    }}
+                    // onFocus={()=>{
+                    //     setShowLogo(false)
+                    // }}
+                    // onBlur={()=>{
+                    //     setShowLogo(true)
+                    // }}
                 />
 
                 {errors.password && (
