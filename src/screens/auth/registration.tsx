@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import {Text, SafeAreaView, TextInput, Pressable, View, Image} from 'react-native';
+import {Text, SafeAreaView, TextInput, Pressable, Image, ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AuthStyles from "../../styles/auth/AuthStyles";
 
 import { useNavigation } from '@react-navigation/native';
-import Logo from "../../images/auth/logo.svg";
+
+import {registerUser} from "../../../requests/auth/authRequets";
 
 
-// import { registerUser } from '../auth/auth';
 
 const Registration = () => {
     const [login, SetLogin] = useState<string>('');
@@ -19,7 +19,7 @@ const Registration = () => {
         password: undefined,
     });
 
-    const loginRegex = /^[A-Za-z]{3,}$/;
+    const loginRegex = /^[A-Za-z1-9_.'-]{3,}$/;
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&',.])[A-Za-z\d@$!%*?&',.]{8,}$/;
 
     const navigation = useNavigation();
@@ -64,6 +64,11 @@ const Registration = () => {
         }
     };
 
+    const handleSubmit = async () => {
+        const isRegistred = await registerUser(login, password);
+        if(isRegistred) console.log(isRegistred)
+    }
+
     useEffect(()=>{
         ValidateForm()
     }, [login, password, passwordCopy]);
@@ -78,8 +83,8 @@ const Registration = () => {
                 end={{ x: 1, y: 0 }}
             />
 
-            <View style = {AuthStyles.Box}>
-                <Image source={Logo} style={AuthStyles.Logo}/>
+            <ScrollView contentContainerStyle= {AuthStyles.Box} keyboardShouldPersistTaps='handled' showsVerticalScrollIndicator={false}>
+                <Image source={require('../../images/auth/Logo.png')}/>
                 <Text style={AuthStyles.LogoName}>FFL</Text>
                 <TextInput
                     placeholder = 'Введите логин'
@@ -115,7 +120,7 @@ const Registration = () => {
 
                 <Pressable
                     disabled = {!isFormValid}
-                    // onPress={Submit}
+                    onPress={handleSubmit}
                     style = {AuthStyles.MyButton}
                 >
                     <Text style = {AuthStyles.MyButtonText}>Создать аккаунт</Text>
@@ -123,11 +128,11 @@ const Registration = () => {
 
                 <Pressable
                     style = {{marginTop: 15}}
-                    onPress={()=>navigation.navigate('Login')}
+                    onPress={()=>navigation.navigate('Login' as never)}
                 >
                     <Text style = {{fontSize: 20}}>Уже есть аккаунт?</Text>
                 </Pressable>
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }

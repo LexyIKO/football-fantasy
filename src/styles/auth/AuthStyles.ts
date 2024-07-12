@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
+const AuthStyles = StyleSheet.create({
     container: {
         flex: 1,
         display: 'flex',
@@ -15,9 +15,9 @@ const styles = StyleSheet.create({
     },
     Box: {
         display: 'flex',
-        alignItems: 'center',
         marginTop: 60,
-        paddingBottom: 10
+        alignItems: 'center',
+
     },
     Logo: {
         // marginTop: 140,
@@ -69,4 +69,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default styles
+export default AuthStyles

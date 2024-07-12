@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Text, SafeAreaView, View, TextInput, Pressable, Image } from 'react-native';
+import { Text, SafeAreaView, TextInput, Pressable, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AuthStyles from "../../styles/auth/AuthStyles";
 //import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import Logo from '../../images/auth/logo.svg'
 import {LinearGradient} from "expo-linear-gradient";
 
-
+import {checkToken, loginUser} from "../../../requests/auth/authRequets";
 
 const Login = () => {
     const [login, SetLogin] = useState<string>('');
@@ -17,8 +16,9 @@ const Login = () => {
         login: undefined,
         password: undefined,
     });
+    const [showLogo, setShowLogo] = useState(true);
 
-    const loginRegex = /^[A-Za-z]{3,}$/;
+    const loginRegex = /^[A-Za-z1-9_.'-]{3,}$/;
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&',.])[A-Za-z\d@$!%*?&',.]{8,}$/;
 
     const navigation = useNavigation();
@@ -46,7 +46,7 @@ const Login = () => {
         }
 
 
-        // Валидация пароля
+        //Валидация пароля
         if (!password) {
             errors.password = undefined;
         } else if (password.length < 8) {
@@ -66,10 +66,33 @@ const Login = () => {
 
     };
 
+    const handleSubmit = async () => {
+        const isLogged = await loginUser(login, password);
+        if(isLogged.token) {
+            // @ts-ignore
+            navigation.navigate("Main")
+        }
+    }
+
+    useEffect(() => {
+        const checkUserToken = async () => {
+            try {
+                const token = await checkToken()
+                if (token) {
+                    // @ts-ignore
+                    navigation.navigate("Main")
+                }
+            } catch (error) {
+                console.log('Failed to load token', error);
+            }
+        };
+
+        checkUserToken();
+    }, []);
+
     useEffect(()=>{
         ValidateForm()
     }, [login, password]);
-
 
     return(
         <SafeAreaView style = {AuthStyles.container}>
@@ -79,8 +102,8 @@ const Login = () => {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
             />
-            <View style = {AuthStyles.Box}>
-                <Image source={Logo} style={AuthStyles.Logo}/>
+            <ScrollView contentContainerStyle={AuthStyles.Box} keyboardShouldPersistTaps='handled' showsVerticalScrollIndicator={false}>
+                <Image source={require('../../images/auth/Logo.png')} style={{display:  showLogo ? 'flex': 'none'}}/>
                 <Text style={AuthStyles.LogoName}>FFL</Text>
                 <TextInput
                     placeholder = 'Введите логин'
@@ -89,6 +112,12 @@ const Login = () => {
                     value = {login}
                     maxLength={16}
                     onChangeText = {SetLogin}
+                    onFocus={()=>{
+                        setShowLogo(false)
+                    }}
+                    onBlur={()=>{
+                        setShowLogo(true)
+                    }}
                 />
 
                 {errors.login && (
@@ -102,6 +131,12 @@ const Login = () => {
                     secureTextEntry
                     value = {password}
                     onChangeText = {SetPassword}
+                    onFocus={()=>{
+                        setShowLogo(false)
+                    }}
+                    onBlur={()=>{
+                        setShowLogo(true)
+                    }}
                 />
 
                 {errors.password && (
@@ -111,18 +146,18 @@ const Login = () => {
 
                 <Pressable
                     disabled={!isFormValid}
-                    //onPress={Submit}
+                    onPress={handleSubmit}
                     style = {AuthStyles.MyButton}
                 >
                     <Text style = {AuthStyles.MyButtonText}>Войти</Text>
                 </Pressable>
 
                 <Pressable
-                    onPress={()=>navigation.navigate('Register')}
+                    onPress={()=>navigation.navigate('Register' as never)}
                 >
                     <Text style = {{fontSize: 20, marginTop: 10}}>Нет аккаунта?</Text>
                 </Pressable>
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }

@@ -1,0 +1,29 @@
+import * as React from "react"
+import Svg, {Path, SvgProps} from "react-native-svg"
+
+function SvgIconProfile(props: SvgProps) {
+    return (
+        <Svg
+            width={50}
+            height={50}
+            viewBox="0 0 35 35"
+            fill="none"
+            {...props}
+        >
+            <Path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M14.186 14.849a3.314 3.314 0 116.628 0 3.314 3.314 0 01-6.628 0zM17.5 12.86a1.988 1.988 0 100 3.977 1.988 1.988 0 000-3.976z"
+                fill="#343434"
+            />
+            <Path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M8 17.5a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0zm9.5-8.174a8.174 8.174 0 00-5.795 13.939c.16-.86.472-1.67 1.101-2.323.94-.975 2.444-1.454 4.694-1.454s3.753.479 4.694 1.454c.629.652.942 1.463 1.101 2.323A8.174 8.174 0 0017.5 9.325zm4.59 14.94c-.09-1.072-.323-1.857-.85-2.404-.574-.595-1.638-1.048-3.74-1.048-2.102 0-3.166.453-3.74 1.048-.527.547-.76 1.332-.85 2.403a8.136 8.136 0 004.59 1.41c1.701 0 3.281-.52 4.59-1.41z"
+                fill="#343434"
+            />
+        </Svg>
+    )
+}
+
+export default SvgIconProfile
