@@ -28,9 +28,9 @@ const leagueModal = (props: modalProps) => {
         await getLeagues().then((res)=>{setLeagueList(res.leagues)})
     }
 
-    useEffect(() => {
-        getDataForLeagues()
-    }, []);
+    // useEffect(() => {
+    //     getDataForLeagues()
+    // }, []);
 
     useEffect(() => {
         if(pickedLeague){

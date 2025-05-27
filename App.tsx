@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import {ActivityIndicator, SafeAreaView} from 'react-native';
 
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
@@ -13,17 +12,14 @@ import Home from "./src/screens/app/main_screens/home";
 import Profile from "./src/screens/app/main_screens/profile";
 import Tournaments from "./src/screens/app/main_screens/tournaments";
 import CreateTournament from "./src/screens/app/side_screens/CreateTournament";
+import TournamentItem from "./src/screens/app/main_screens/tournnamentItem";
 
 import AuthStyles from "./src/styles/auth/AuthStyles";
 import {LinearGradient} from "expo-linear-gradient";
 
-
-
 const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
 const MainStack = createNativeStackNavigator();
-
-
 
 function AuthLayout(){
   return(
@@ -41,6 +37,7 @@ function MainLayout(){
             <MainStack.Screen name = 'Profile' component={Profile} options={{headerShown: false}}/>
             <MainStack.Screen name = 'Tournaments' component={Tournaments} options={{headerShown: false}}/>
             <MainStack.Screen name = 'CreateTournament' component={CreateTournament} options={{headerShown: false}}/>
+            <MainStack.Screen name = 'TournamentItem' component={TournamentItem} options={{headerShown: false}}/>
         </MainStack.Navigator>
     );
 }
@@ -55,14 +52,13 @@ export default function App() {
         return (
 
             <NavigationContainer>
-                <Stack.Navigator initialRouteName='Auth' >
+                <Stack.Navigator initialRouteName='Main' >
                     <Stack.Screen name = 'Main' component={MainLayout} options={{headerShown: false}}/>
                     <Stack.Screen name = 'Auth' component={AuthLayout} options={{headerShown: false}}/>
                 </Stack.Navigator>
 
                 <StatusBar style='auto' />
             </NavigationContainer>
-
         );
     }
     else{
@@ -79,6 +75,4 @@ export default function App() {
 
         )
     }
-
-
 }

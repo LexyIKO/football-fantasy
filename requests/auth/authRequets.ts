@@ -16,7 +16,6 @@ export const loginUser = async (login: string, password: string) => {
         const token = await response.data.token;
         const userId = await response.data.user.id;
 
-
         // Сохранение токена в AsyncStorage
         if (token) {
             // Сохраняем токен в AsyncStorage
@@ -30,8 +29,6 @@ export const loginUser = async (login: string, password: string) => {
         } else {
             Alert.alert('Попытка сохранить null или undefined в AsyncStorage');
         }
-
-
 
         return response.data;
     } catch (error) {
@@ -52,7 +49,6 @@ export const logout = async () => {
     }
 
 };
-
 
 export const registerUser = async (login:string, password: string) => {
     try {

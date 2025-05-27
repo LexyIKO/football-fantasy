@@ -2,30 +2,30 @@ import {
     Text,
     View,
     StyleSheet, Dimensions,
+    Pressable
 
 } from 'react-native';
 
 import IconProfileSelected from "../images/icons/navbar/IconProfileSelected";
 import IconBgCircle from "../images/icons/tournament/IconBgCircle";
+import {tournamentProps} from "../screens/app/main_screens/tournaments";
+import {useNavigation} from "@react-navigation/native";
 
-interface tournamentProps {
-    el: {
-        trId: number,
-        key: string,
-        trName: string,
-        trMaxPlayers: number,
-        trPlayersCount: number,
-        startDate: string,
-        endDate: string,
-        balance: number,
-        status: string,
-    }
+interface tournamentElem {
+    el: tournamentProps
 }
 
-const tournamentCard = (props: tournamentProps) => {
+const tournamentCard = (props: tournamentElem,) => {
+    const navigation = useNavigation();
 
     return (
-        <View
+        <Pressable
+            onPress={() => {
+                // @ts-ignore
+                navigation.navigate('TournamentItem' as never, {
+                    tournamentId: props.el.trId,
+                })
+            }}
             style={[styles.Container,
                 {backgroundColor: props.el.status === 'ongoing' ? 'rgba(74, 74, 252, 1)'
                         : props.el.status === 'ended' ? 'rgba(30, 30, 30, 0.9)' : 'rgba(92,196,84,0.8)'}]}>
@@ -34,14 +34,14 @@ const tournamentCard = (props: tournamentProps) => {
             <Text style={styles.Text}>{props.el.startDate} - {props.el.endDate}</Text>
             <View style={styles.InfoBar}>
                 <Text style={styles.Text}>{props.el.trPlayersCount}/{props.el.trMaxPlayers}</Text>
-                <View style={styles.Avatars}>
-                    <IconProfileSelected style={{position: 'absolute', right: 60, bottom: -25}}/>
-                    <IconProfileSelected style={{position: 'absolute', right: 40, bottom: -25}}/>
-                    <IconProfileSelected style={{position: 'absolute', right: 20, bottom: -25}}/>
-                    <IconProfileSelected style={{position: 'absolute', right: 0, bottom: -25}}/>
-                </View>
+                {/*<View style={styles.Avatars}>*/}
+                {/*    <IconProfileSelected style={{position: 'absolute', right: 60, bottom: -25}}/>*/}
+                {/*    <IconProfileSelected style={{position: 'absolute', right: 40, bottom: -25}}/>*/}
+                {/*    <IconProfileSelected style={{position: 'absolute', right: 20, bottom: -25}}/>*/}
+                {/*    <IconProfileSelected style={{position: 'absolute', right: 0, bottom: -25}}/>*/}
+                {/*</View>*/}
             </View>
-        </View>
+        </Pressable>
     )
 }
 
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     Container: {
         display: 'flex',
         width: Dimensions.get('window').width - 38,
-        height: 158,
+        height: 160,
         borderRadius: 20,
         marginVertical: 20,
         alignItems: 'center'
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         alignItems: 'center',
         marginTop: 50,
-        justifyContent: "space-between"
+        justifyContent: "center"
     },
     Scroller: {
 

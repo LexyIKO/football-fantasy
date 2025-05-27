@@ -1,6 +1,5 @@
-import {API_URL} from "../auth/authRequets";
-
 import {fetchData} from "./fetchDataForDB";
+import {Alert} from "react-native";
 
 export const getLeagues = async () =>{
     try{
@@ -8,6 +7,6 @@ export const getLeagues = async () =>{
         return response
     }
     catch (error){
-        console.log(error + " Ошибка получения лиг")
+        Alert.alert('Ошибка получения лиг');
     }
 }

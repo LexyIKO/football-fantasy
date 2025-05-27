@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'Unbounded-Regular',
         outlineStyle: 'none'
-
     }
 
 })

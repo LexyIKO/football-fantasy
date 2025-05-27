@@ -7,10 +7,10 @@ import CustomInput from "../../../components/customInput";
 import Privacy from "../../../components/create_tournaments/privacy";
 import LeagueModal from "../../../components/create_tournaments/leagueModal";
 
-
 import IconClose from "../../../images/icons/createTournament/IconClose";
 import SvgIconPlus from "../../../images/icons/createTournament/IconArrowUp";
 import SvgIconMinus from "../../../images/icons/createTournament/IconArrowDown";
+import PickTypeButton from "../../../components/create_tournaments/pickTypeButton";
 
 interface leagueList {
     id: number,
@@ -27,6 +27,7 @@ const CreateTournament = () => {
     const [tournamentBalance, setTournamentBalance] = useState<string>('');
     const [gamerNumber, setGamerNumber] = useState<string>('');
     const [isGamePrivate, setIsGamePrivate] = useState<boolean>(true);
+    const [isDraftTypeSelected, setDraftTypeSelected] = useState<boolean>(false);
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
     const [selectedDay, setSelectedDay] = useState<string>('');
@@ -41,7 +42,11 @@ const CreateTournament = () => {
 
     const gamerNumberPlus = () => {
         if(Number(gamerNumber) < 8){
-            setGamerNumber((Number(gamerNumber) + 1).toString());
+            if(Number(gamerNumber) === 0){
+                setGamerNumber((Number(gamerNumber) + 2).toString());
+            }else{
+                setGamerNumber((Number(gamerNumber) + 1).toString());
+            }
         }
     }
 
@@ -64,7 +69,6 @@ const CreateTournament = () => {
             return false
         }
 
-
         return true
     }
 
@@ -83,7 +87,6 @@ const CreateTournament = () => {
     }, [startDate, endDate]);
 
     return(
-
         <SafeAreaView style={styles.Container} ref={focusElem}>
             <View style={styles.Header}>
                 <Text style={styles.Title}>Создание турнира</Text>
@@ -92,8 +95,6 @@ const CreateTournament = () => {
                 }}>
                     <IconClose />
                 </Pressable>
-
-
             </View>
 
             <Pressable
@@ -109,10 +110,6 @@ const CreateTournament = () => {
 
             </Pressable>
 
-
-
-
-
             <LeagueModal
                 closeModal={(league ) => {
                     setIsFindLeagueModalVisible(false)
@@ -120,8 +117,6 @@ const CreateTournament = () => {
                 }}
                 isModalVisible={isFindLeagueModalVisible}
             />
-
-
 
             <CustomInput
                 placeholder={'Название лобби'}
@@ -205,7 +200,7 @@ const CreateTournament = () => {
             </View>
 
             <View style={styles.Privacy}>
-                <Pressable onPress={()=>{setIsGamePrivate(true)}}>
+                <Pressable onPress={()=>{setIsGamePrivate(false)}}>
                     <Privacy isPrivate={false} isGamePrivate={isGamePrivate} />
                 </Pressable>
 
@@ -214,10 +209,23 @@ const CreateTournament = () => {
                 </Pressable>
             </View>
 
+            <View style={{display: 'flex', width: Dimensions.get('window').width - 36, marginTop: 20}}>
+                <Text style={styles.Title}>Тип выбора игроков</Text>
+            </View>
+
+            <View style={styles.Privacy}>
+                <Pressable onPress={()=>{setDraftTypeSelected(false)}}>
+                    <PickTypeButton isDraftButton={false} isDraftButtonSelected={isDraftTypeSelected} />
+                </Pressable>
+
+                <Pressable onPress={()=> {setDraftTypeSelected(true)}}>
+                    <PickTypeButton isDraftButton={true} isDraftButtonSelected={isDraftTypeSelected} />
+                </Pressable>
+            </View>
+
             <Pressable style={[styles.ButtonSubmit, {opacity: isValid ? 1 : 0.7}]}>
                 <Text style={styles.ButtonSubmitText}>Создать</Text>
             </Pressable>
-
 
             <Modal
                 visible={isCalendarModalVisible}
@@ -250,7 +258,7 @@ const CreateTournament = () => {
                                 let differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
 
                                 // Check if the difference is between 0 and 30 days
-                                if (differenceInDays > 0 && differenceInDays <= 30) {
+                                if (differenceInDays > 7 && differenceInDays <= 30) {
                                     setEndDate(day.dateString);
                                 }
                             }
@@ -261,13 +269,14 @@ const CreateTournament = () => {
 
                         }}
                     />
-
+                    <Text>Минимальное время равно 7 дней</Text>
                     <Pressable style={styles.CalendarModalButtonConfirm}
 
                         onPress={()=>{setIsCalendarModalVisible(false); focusElem.current.focus()}}
                     >
                         <Text style={[styles.Title, {color: 'white'}]}>Подтвердить</Text>
                     </Pressable>
+
 
                 </View>
             </Modal>
